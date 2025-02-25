@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QR 코드 생성기</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <style>
+        body { text-align: center; font-family: Arial, sans-serif; }
+        .container { margin-top: 50px; }
+        input { width: 80%; max-width: 300px; padding: 10px; border: 1px solid #ddd; border-radius: 5px; }
+        button { padding: 10px; margin-top: 10px; cursor: pointer; border: none; background: #3498db; color: white; border-radius: 5px; }
+        button:hover { background: #2980b9; }
+        #qrcode { margin-top: 20px; }
+        .qr-wrapper { display: inline-block; padding: 10px; background: white; border-radius: 10px; }
+        a { display: block; margin-top: 10px; color: #3498db; text-decoration: none; }
+    </style>
+</head>
+<body>
+
+    <h1>📌 QR 코드 생성기 (텍스트, 링크, 이미지 지원)</h1>
+    <div class="container">
+        <input type="text" id="textInput" placeholder="텍스트, URL 또는 이미지 링크 입력">
+        <button onclick="generateQRCode()">QR 코드 생성</button>
+        <div id="qrcode"></div>
+    </div>
+
+    <script>
+        function generateQRCode() {
+            let text = document.getElementById("textInput").value.trim();
+            let qrcodeDiv = document.getElementById("qrcode");
+            qrcodeDiv.innerHTML = "";
+
+            // QR 코드 생성
+            let qrWrapper = document.createElement("div");
+            qrWrapper.classList.add("qr-wrapper");
+            qrcodeDiv.appendChild(qrWrapper);
+
+            new QRCode(qrWrapper, {
+                text: text,
+                width: 150,
+                height: 150
+            });
+
+            // URL이면 클릭 가능한 링크 추가
+            if (text.startsWith("http://") || text.startsWith("https://")) {
+                let link = document.createElement("a");
+                link.href = text;
+                link.target = "_blank";
+                link.innerText = "🔗 QR 코드로 이동";
+                qrcodeDiv.appendChild(link);
+            }
+
+            // 이미지 URL이면 이미지 표시
+            else if (text.match(/\.(jpeg|jpg|gif|png)$/) !== null) {
+                let img = document.createElement("img");
+                img.src = text;
+                img.alt = "입력된 이미지";
+                img.style.maxWidth = "150px";
+                img.style.marginTop = "10px";
+                qrcodeDiv.appendChild(img);
+            }
+        }
+    </script>
+
+</body>
+</html>
